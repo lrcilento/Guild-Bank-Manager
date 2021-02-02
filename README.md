@@ -14,9 +14,8 @@ A fully fledged bank manager for world of warcraft guilds.
 ## Installation
 ```
 sudo pip install -r requirements.txt
+sudo chmod +x run.sh
 ```
 
 ## Usage
-```
-python app.py
-```
+Just execute run.sh
