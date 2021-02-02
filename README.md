@@ -12,7 +12,7 @@ A fully fledged bank manager for world of warcraft guilds.
 - [ ] Windows Compatibility
 
 ## Installation
-Create your database in MySQL using 'strut.sql'.
+- Create your database in MySQL using 'strut.sql'
 ```
 sudo pip install -r requirements.txt
 sudo chmod +x start.sh
