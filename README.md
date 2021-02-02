@@ -1,5 +1,5 @@
 # Guild-Bank-Manager
-A fully fledged bank manager for world of warcraft guilds.
+A fully-fledged bank manager for world of warcraft guilds.
 
 ## Features
 - [x] GUI
