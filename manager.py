@@ -22,6 +22,19 @@ def getMonths():
         tkinter.messagebox.showerror("Erro!", err)
     return months
 
+def getCouncil():
+    council = []
+    try:
+        sql = "SELECT Council.RANK_NAME, Council.COUNSELOR, Ranks.PAYMENT FROM Council INNER JOIN Ranks ON Council.RANK_NAME=Ranks.NAME"
+        cursor = db.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        for row in result:
+            council.append(row)
+    except mysql.connector.Error as err:
+        tkinter.messagebox.showerror("Erro!", err)
+    return council
+
 def getRanks():
     ranks = []
     try:
