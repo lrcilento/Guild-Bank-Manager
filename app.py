@@ -3,8 +3,8 @@ from manager import *
 
 root = tk.Tk()
 
-root.title("Guild Bank Manager v0.1")
-root.geometry("1200x680")
+root.title("Guild Bank Manager v0.2")
+root.geometry("1200x970")
 root.resizable(False, False)
 selectedMonth = tk.StringVar()
 
@@ -90,6 +90,59 @@ def render():
     newRankButton = tk.Button(ranksFrame, text = "Adicionar", command=lambda: createRank(rankName.get(), rankSalary.get()))
     newRankButton.grid(row = 3, column = 2, padx = 5, pady = 5)
 
+    itemMenuFrame = tk.LabelFrame(root, text = "Gerenciar itens:")
+    itemMenuFrame.grid(row = 4, column = 0, padx = 15)
+    itemNameLabel = tk.Label(itemMenuFrame, text = "Nome:")
+    itemNameLabel.grid(row = 0, column = 0, padx = 15, pady = 5)
+    itemName = tk.StringVar()
+    itemNameEntry = tk.Entry(itemMenuFrame, textvariable = itemName)
+    itemNameEntry.grid(row = 0, column = 1, columnspan = 2)
+    itemTypeLabel = tk.Label(itemMenuFrame, text = "Tipo:")
+    itemTypeLabel.grid(row = 1, column = 0, padx = 15, pady = 5)
+    itemType = tk.StringVar()
+    itemTypeRadioComsumable = tk.Radiobutton(itemMenuFrame, text="Comsumível", variable = itemType, value = "Comsumível")
+    itemTypeRadioComsumable.grid(row = 1, column = 1)
+    itemTypeRadioBoE = tk.Radiobutton(itemMenuFrame, text="BoE", variable = itemType, value = "BoE")
+    itemTypeRadioBoE.grid(row = 1, column = 2)
+    def createItem(itemName, itemType):
+        newItem(itemName, itemType)
+        render()
+    def removeItem(itemName):
+        deleteItem(itemName)
+        render()
+    deleteItemButton = tk.Button(itemMenuFrame, text = "Remover", command=lambda: removeItem(itemName.get()))
+    deleteItemButton.grid(row = 2, column = 1, padx = 10, pady = 5)
+    newItemButton = tk.Button(itemMenuFrame, text = "Adicionar", command=lambda: createItem(itemName.get(), itemType.get()))
+    newItemButton.grid(row = 2, column = 2, padx = 10, pady = 5)
+
+    packagesFrame = tk.LabelFrame(root, text = "Gerenciar serviços:")
+    packagesFrame.grid(row = 5, column = 0, padx = 15, pady = 10)
+    packageNameLabel = tk.Label(packagesFrame, text = "Nome:")
+    packageNameLabel.grid(row = 1, column =0, padx = 15, pady = 5)
+    packageName = tk.StringVar()
+    packageNameEntry = tk.Entry(packagesFrame, textvariable = packageName)
+    packageNameEntry.grid(row = 1, column = 1, columnspan = 3, padx = 18)
+    packageShareLabel = tk.Label(packagesFrame, text = "Imposto:")
+    packageShareLabel.grid(row = 2, column = 0, padx = 15, pady = 5)
+    packageShare = tk.DoubleVar()
+    packageShareEntry = tk.Entry(packagesFrame, textvariable = packageShare)
+    packageShareEntry.grid(row = 2, column = 1, columnspan = 3)
+    def createPackage(packageName, packageShare):
+        newPackage(packageName, packageShare)
+        render()
+    def removePackage(packageName):
+        deletePackage(packageName)
+        render()
+    def callUpdatePackage(packageName, packageShare):
+        updatePackage(packageName, packageShare)
+        render()
+    deletePackageButton = tk.Button(packagesFrame, text = "Remover", command=lambda: removePackage(packageName.get()))
+    deletePackageButton.grid(row = 3, column = 0, padx = 5, pady = 5)
+    updatePackageButton = tk.Button(packagesFrame, text = "Atualizar", command=lambda: callUpdatePackage(packageName.get(), packageShare.get()))
+    updatePackageButton.grid(row = 3, column = 1, padx = 5, pady = 5)
+    newPackageButton = tk.Button(packagesFrame, text = "Adicionar", command=lambda: createPackage(packageName.get(), packageShare.get()))
+    newPackageButton.grid(row = 3, column = 2, padx = 5, pady = 5)
+    
     purchasesFrame = tk.LabelFrame(root, text = "Compras:")
     purchasesFrame.grid(row = 0, column = 1, pady = 10, sticky = tk.N)
     itensListBox = tk.Listbox(purchasesFrame, selectmode=tk.SINGLE, height = 12, width = 25)
@@ -115,7 +168,7 @@ def render():
     buyButton = tk.Button(purchasesFrame, text = "Salvar compra", command=lambda: createPurchase(itensListBox.get(itensListBox.curselection()), itemQnt.get(), itemTotal.get()))
     buyButton.grid(row = 4, column = 1, padx = 5, pady = 15)
 
-    boeFrame = tk.LabelFrame(root, text = "Vendas:")
+    boeFrame = tk.LabelFrame(root, text = "BoEs:")
     boeFrame.grid(row = 1, column = 1, rowspan = 2, sticky = tk.N)
     boeListBox = tk.Listbox(boeFrame, selectmode=tk.SINGLE, height = 12, width = 25)
     boes = getBoEs()
@@ -143,30 +196,35 @@ def render():
     sellButton = tk.Button(boeFrame, text = "Salvar venda", command=lambda: createSell(boeListBox.get(boeListBox.curselection()), boeItemLevel.get(), boeSocket.get(), boePrice.get()))
     sellButton.grid(row = 5, column = 1, padx = 5, pady = 15)
 
-    itemMenuFrame = tk.LabelFrame(root, text = "Gerenciar itens:")
-    itemMenuFrame.grid(row = 3, column = 1)
-    itemNameLabel = tk.Label(itemMenuFrame, text = "Nome:")
-    itemNameLabel.grid(row = 0, column = 0, padx = 30, pady = 5)
-    itemName = tk.StringVar()
-    itemNameEntry = tk.Entry(itemMenuFrame, textvariable = itemName, width = 30)
-    itemNameEntry.grid(row = 0, column = 1, columnspan = 2)
-    itemTypeLabel = tk.Label(itemMenuFrame, text = "Tipo:")
-    itemTypeLabel.grid(row = 1, column = 0, padx = 30, pady = 5)
-    itemType = tk.StringVar()
-    itemTypeRadioComsumable = tk.Radiobutton(itemMenuFrame, text="Comsumível", variable = itemType, value = "Comsumível")
-    itemTypeRadioComsumable.grid(row = 1, column = 1, padx = 10)
-    itemTypeRadioBoE = tk.Radiobutton(itemMenuFrame, text="BoE", variable = itemType, value = "BoE")
-    itemTypeRadioBoE.grid(row = 1, column = 2, padx = 10)
-    def createItem(itemName, itemType):
-        newItem(itemName, itemType)
+    serviceFrame = tk.LabelFrame(root, text = "Serviços:")
+    serviceFrame.grid(row = 3, column = 1, rowspan = 3, sticky = tk.N, pady = 10)
+    serviceListBox = tk.Listbox(serviceFrame, selectmode=tk.SINGLE, height = 12, width = 25)
+    packages = getPackages()
+    indexaux = 0
+    for package in packages:
+        serviceListBox.insert(indexaux, package[0] + " (" + str(int(package[1]*100)) + "%)")
+        indexaux += 1
+    serviceListBox.grid(row = 0, column = 0, rowspan = 8, padx = 15, pady = 7)
+    serviceBuyerNameLabel = tk.Label(serviceFrame, text = "Comprador:")
+    serviceBuyerNameLabel.grid(row = 0, column = 1, pady = 8)
+    serviceBuyerName = tk.StringVar()
+    serviceBuyerNameEntry = tk.Entry(serviceFrame, textvariable = serviceBuyerName)
+    serviceBuyerNameEntry.grid(row = 1, column = 1, padx = 15)
+    serviceSellerNameLabel = tk.Label(serviceFrame, text = "Vendedor:")
+    serviceSellerNameLabel.grid(row = 2, column = 1, pady = 8)
+    serviceSellerName = tk.StringVar()
+    serviceSellerNameEntry = tk.Entry(serviceFrame, textvariable = serviceSellerName)
+    serviceSellerNameEntry.grid(row = 3, column = 1, padx = 15)
+    servicePriceLabel = tk.Label(serviceFrame, text = "Valor de venda:")
+    servicePriceLabel.grid(row = 5, column = 1, pady = 8)
+    servicePrice = tk.IntVar()
+    servicePriceEntry = tk.Entry(serviceFrame, textvariable = servicePrice)
+    servicePriceEntry.grid(row = 6, column = 1, padx = 15)
+    def createOrder(serviceName, serviceBuyerName, serviceSellerName, servicePrice):
+        order(serviceName, serviceBuyerName, serviceSellerName, servicePrice)
         render()
-    def removeItem(itemName):
-        deleteItem(itemName)
-        render()
-    deleteItemButton = tk.Button(itemMenuFrame, text = "Remover", command=lambda: removeItem(itemName.get()))
-    deleteItemButton.grid(row = 2, column = 1, padx = 37, pady = 5)
-    newItemButton = tk.Button(itemMenuFrame, text = "Adicionar", command=lambda: createItem(itemName.get(), itemType.get()))
-    newItemButton.grid(row = 2, column = 2, padx = 36, pady = 5)
+    sellButton = tk.Button(serviceFrame, text = "Salvar serviço", command=lambda: createOrder(serviceListBox.get(serviceListBox.curselection()).split(" (")[0], serviceBuyerName.get(), serviceSellerName.get(), servicePrice.get()))
+    sellButton.grid(row = 7, column = 1, padx = 5, pady = 15)
 
     if len(selectedMonth.get()) < 1:
         try:
@@ -191,6 +249,8 @@ def render():
     earningsFrame.grid(row = 1, column = 0, columnspan = 2, pady = 5, padx = 5)
     tk.Label(earningsFrame, text = "Vendas:").grid(row = 0, column = 0, padx = 82)
     tk.Label(earningsFrame, text = str(resume[0])+"g", fg='green').grid(row = 0, column = 1, padx = 49)
+    tk.Label(earningsFrame, text = "Serviços:").grid(row = 1, column = 0, padx = 70)
+    tk.Label(earningsFrame, text = str(resume[4])+"g", fg='green').grid(row = 1, column = 1, padx = 49)
     expenduresFrame = tk.LabelFrame(resumeFrame, text = "Gastos:")
     expenduresFrame.grid(row = 2, column = 0, columnspan = 2)
     tk.Label(expenduresFrame, text = "Comsumíveis:").grid(row = 0, column = 0, padx = 49)
@@ -202,7 +262,7 @@ def render():
     indexaux = 0
     for rank in ranks:
         tk.Label(salaryFrame, text = rank[0]+":").grid(row = indexaux, column = 0, padx = 58)
-        tk.Label(salaryFrame, text = str(int(resume[0]*rank[1]))+"g").grid(row = indexaux, column = 1, padx = 58)
+        tk.Label(salaryFrame, text = str(int(resume[0]*rank[1]) + int(resume[4]*rank[1]))+"g").grid(row = indexaux, column = 1, padx = 58)
         indexaux += 1
         
     transactionsFrame = tk.LabelFrame(root, text = "Transações:")

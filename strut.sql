@@ -1,4 +1,5 @@
-CREATE DATABASE `MyWoWGuild` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE `Dagon` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `Dagon`;
 CREATE TABLE `Ranks` (
   `name` varchar(45) NOT NULL,
   `payment` double NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE `Earnings` (
   `month` varchar(45) NOT NULL,
   `year` int NOT NULL,
   `boe_earnings` int NOT NULL,
+  `service_earnings` int NOT NULL,
   `total_purchases` int NOT NULL,
   `total_salaries` int NOT NULL,
   `result` int NOT NULL,
@@ -60,3 +62,24 @@ CREATE TABLE `BoEs` (
   CONSTRAINT `fk_BoEs_1` FOREIGN KEY (`item`) REFERENCES `Itens` (`name`),
   CONSTRAINT `fk_BoEs_2` FOREIGN KEY (`transaction_date`) REFERENCES `Earnings` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `Packages` (
+  `name` varchar(45) NOT NULL,
+  `guild_share` double NOT NULL,
+  PRIMARY KEY (`name`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `Services` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `package` varchar(45) NOT NULL,
+  `buyer` varchar(45) NOT NULL,
+  `seller` varchar(45) NOT NULL,
+  `price` int NOT NULL,
+  `transaction_date` varchar(45) NOT NULL,
+  `transaction_day` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `service_id_UNIQUE` (`id`),
+  KEY `fk_Services_1_idx` (`package`),
+  KEY `fk_Services_2_idx` (`transaction_date`),
+  CONSTRAINT `fk_Services_1` FOREIGN KEY (`package`) REFERENCES `Packages` (`name`),
+  CONSTRAINT `fk_Services_2` FOREIGN KEY (`transaction_date`) REFERENCES `Earnings` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

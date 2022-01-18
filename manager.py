@@ -122,7 +122,7 @@ def newCouncil(councilName, councilRank):
         month = datetime.date.today().month
         year = datetime.date.today().year
         date = int(str(month) + str(year))
-        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
+        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS, SERVICE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
         try:
             cursor = db.cursor()
             cursor.execute(sql)
@@ -131,7 +131,7 @@ def newCouncil(councilName, councilRank):
             try:
                 cursor.execute(sql)
                 ranksData = cursor.fetchone()
-                sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*ranksData[0]), earningsData[1]-(earningsData[2]*ranksData[0]), date)
+                sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*ranksData[0])+(earningsData[3]*ranksData[0]), earningsData[1]-(earningsData[2]*ranksData[0])-(earningsData[3]*ranksData[0]), date)
                 try:
                     cursor.execute(sql)
                     db.commit()
@@ -180,7 +180,7 @@ def deleteCouncil(councilName):
         month = datetime.date.today().month
         year = datetime.date.today().year
         date = int(str(month) + str(year))
-        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
+        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS, SERVICE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
         try:
             cursor = db.cursor()
             cursor.execute(sql)
@@ -193,7 +193,7 @@ def deleteCouncil(councilName):
                 try:
                     cursor.execute(sql)
                     ranksData = cursor.fetchone()
-                    sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*ranksData[0]), earningsData[1]+(earningsData[2]*ranksData[0]), date)
+                    sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*ranksData[0])-(earningsData[3]*ranksData[0]), earningsData[1]+(earningsData[2]*ranksData[0])+(earningsData[3]*ranksData[0]), date)
                     try:
                         cursor.execute(sql)
                         db.commit()
@@ -221,7 +221,7 @@ def updateRank(rankName, rankSalary):
         month = datetime.date.today().month
         year = datetime.date.today().year
         date = int(str(month) + str(year))
-        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
+        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS, SERVICE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
         try:
             cursor = db.cursor()
             cursor.execute(sql)
@@ -232,10 +232,10 @@ def updateRank(rankName, rankSalary):
                 oldSalaryData = cursor.fetchone()
                 if rankSalary > oldSalaryData[0]:
                     salaryDiff = rankSalary - oldSalaryData[0]
-                    finalSQL = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*salaryDiff), earningsData[1]-(earningsData[2]*salaryDiff), date)
+                    finalSQL = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*salaryDiff)+(earningsData[3]*salaryDiff), earningsData[1]-(earningsData[2]*salaryDiff)-(earningsData[3]*salaryDiff), date)
                 else:
                     salaryDiff = oldSalaryData[0] - rankSalary
-                    finalSQL = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*salaryDiff), earningsData[1]+(earningsData[2]*salaryDiff), date)
+                    finalSQL = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*salaryDiff)-(earningsData[3]*salaryDiff), earningsData[1]+(earningsData[2]*salaryDiff)+(earningsData[3]*salaryDiff), date)
                 sql = "SELECT COUNSELOR FROM Council WHERE RANK_NAME = '{0}'".format(rankName)
                 try:
                     cursor.execute(sql)
@@ -272,7 +272,7 @@ def updateCouncil(councilName, councilRank):
         month = datetime.date.today().month
         year = datetime.date.today().year
         date = int(str(month) + str(year))
-        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
+        sql = "SELECT TOTAL_SALARIES, RESULT, BOE_EARNINGS, SERVICE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
         try:
             cursor = db.cursor()
             cursor.execute(sql)
@@ -292,7 +292,7 @@ def updateCouncil(councilName, councilRank):
                         if oldPaymentData[0] > newPaymentData[0]:
                             everythingOK = False
                             paymentDiff = oldPaymentData[0] - newPaymentData[0]
-                            sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*paymentDiff), earningsData[1]+(earningsData[2]*paymentDiff), date)
+                            sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]-(earningsData[2]*paymentDiff)-(earningsData[3]*paymentDiff), earningsData[1]+(earningsData[2]*paymentDiff)+(earningsData[3]*paymentDiff), date)
                             try:
                                 cursor.execute(sql)
                                 db.commit()
@@ -302,7 +302,7 @@ def updateCouncil(councilName, councilRank):
                         elif oldPaymentData[0] < newPaymentData[0]:
                             everythingOK = False
                             paymentDiff = newPaymentData[0] - oldPaymentData[0]
-                            sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*paymentDiff), earningsData[1]-(earningsData[2]*paymentDiff), date)
+                            sql = "UPDATE Earnings SET TOTAL_SALARIES = {0}, RESULT = {1} WHERE ID = {2}".format(earningsData[0]+(earningsData[2]*paymentDiff)+(earningsData[3]*paymentDiff), earningsData[1]-(earningsData[2]*paymentDiff)-(earningsData[3]*paymentDiff), date)
                             try:
                                 cursor.execute(sql)
                                 db.commit()
@@ -388,8 +388,47 @@ def sell(boeName, boeItemLevel, boeSocket, boePrice):
         except mysql.connector.Error as err:
             tkinter.messagebox.showerror("Erro ao inserir!", err)
 
+def order(serviceName, serviceBuyerName, serviceSellerName, servicePrice):
+    if servicePrice > 0 and len(serviceBuyerName) > 0 and len(serviceSellerName) > 0:
+        month = datetime.date.today().month
+        year = datetime.date.today().year
+        date = int(str(month) + str(year))
+        day = datetime.date.today().day
+        sql = "SELECT GUILD_SHARE FROM Packages WHERE NAME='{0}'".format(serviceName)
+        try:
+            cursor = db.cursor()
+            cursor.execute(sql)
+            serviceGuildShare = cursor.fetchone()
+            print(serviceGuildShare[0])
+        except mysql.connector.Error as err:
+            tkinter.messagebox.showerror("Erro ao selecionar guild_share!", err)
+
+        sql = "INSERT INTO Services (PACKAGE, BUYER, SELLER, PRICE, TRANSACTION_DATE, TRANSACTION_DAY) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (serviceName, serviceBuyerName, serviceSellerName, servicePrice*serviceGuildShare[0], date, day)
+        try:
+            cursor = db.cursor()
+            cursor.execute(sql, values)
+            db.commit()
+            try:
+                sql = "SELECT SERVICE_EARNINGS, TOTAL_SALARIES, RESULT FROM Earnings WHERE ID = {0}".format(date)
+                cursor.execute(sql)
+                result = cursor.fetchone()
+                calculatedTax = calculateTax(servicePrice)
+                try:
+                    sql = "UPDATE Earnings SET SERVICE_EARNINGS={0}, TOTAL_SALARIES={1}, RESULT={2} WHERE ID={3}".format(result[0]+servicePrice, result[1]+calculatedTax[1], result[2]+calculatedTax[0], date)
+                    cursor.execute(sql)
+                    db.commit()
+                    cursor.close()
+                    tkinter.messagebox.showinfo("Sucesso!", "Ordem salva com sucesso!")
+                except mysql.connector.Error as err:
+                    tkinter.messagebox.showerror("Erro ao atualizar!", err)
+            except mysql.connector.Error as err:
+                tkinter.messagebox.showerror("Erro ao selecionar!", err)
+        except mysql.connector.Error as err:
+            tkinter.messagebox.showerror("Erro ao inserir!", err)
+
 def getResume(monthName):
-    sql = "SELECT BOE_EARNINGS, TOTAL_PURCHASES, TOTAL_SALARIES, RESULT FROM Earnings WHERE NAME = '{0}'".format(monthName)
+    sql = "SELECT BOE_EARNINGS, TOTAL_PURCHASES, TOTAL_SALARIES, RESULT, SERVICE_EARNINGS FROM Earnings WHERE NAME = '{0}'".format(monthName)
     try:
         cursor = db.cursor()
         cursor.execute(sql)
@@ -443,22 +482,34 @@ def getTransactions(date):
             result = cursor.fetchall()
             for row in result:
                 transactions.append(row)
-            sql = "SELECT * FROM Purchases WHERE TRANSACTION_DATE = {0}".format(date_id)
+            sql = "SELECT * FROM Services WHERE TRANSACTION_DATE = {0}".format(date_id)
             try:
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 for row in result:
                     transactions.append(row)
-                transactions.sort(key=sortFunc)
-                for transaction in transactions:
-                    if len(transaction) == 7:
-                        socketed = ""
-                        if transaction[4] == "Yes":
-                            socketed = " - Socketed"
-                        final.append([transaction[0], "BoE", transaction[1]+" ("+str(transaction[3])+socketed+"): +"+str(transaction[2])+"g"])
-                    else:
-                        final.append([transaction[0], "Consumível", str(transaction[2])+"x "+transaction[1]+": -"+str(transaction[3])+"g"])
-                return final
+                sql = "SELECT * FROM Purchases WHERE TRANSACTION_DATE = {0}".format(date_id)
+                try:
+                    cursor.execute(sql)
+                    result = cursor.fetchall()
+                    for row in result:
+                        transactions.append(row)
+                    transactions.sort(key=sortFunc)
+                    for transaction in transactions:
+                        if len(transaction) == 7:
+                            if transaction[4] == "No":
+                                socketed = ""
+                                final.append([transaction[0], "BoE", transaction[1]+" ("+str(transaction[3])+socketed+"): +"+str(transaction[2])+"g"])
+                            elif transaction[4] == "Yes":
+                                socketed = " - Socketed"
+                                final.append([transaction[0], "BoE", transaction[1]+" ("+str(transaction[3])+socketed+"): +"+str(transaction[2])+"g"])
+                            else:
+                                final.append([transaction[0], "Serviço", transaction[1]+" ("+str(transaction[3])+" -> "+str(transaction[2])+"): +"+str(transaction[4])+"g"])
+                        else:
+                            final.append([transaction[0], "Consumível", str(transaction[2])+"x "+transaction[1]+": -"+str(transaction[3])+"g"])
+                    return final
+                except mysql.connector.Error as err:
+                    tkinter.messagebox.showerror("Erro ao selecionar!", err)
             except mysql.connector.Error as err:
                 tkinter.messagebox.showerror("Erro ao selecionar!", err)
         except mysql.connector.Error as err:
@@ -467,7 +518,19 @@ def getTransactions(date):
         tkinter.messagebox.showerror("Erro ao selecionar!", err)
 
 def trimString(transactionString, date):
-    if "(" in transactionString and "Socketed" not in transactionString:
+    if "(" in transactionString and "->" in transactionString:
+        transactionList = transactionString.split()
+        transactionList[len(transactionList)-1] = transactionList[len(transactionList)-1].replace('g', '').replace('+', '')
+        transactionList[len(transactionList)-2] = transactionList[len(transactionList)-2].replace('):', '')
+        transactionList.pop(len(transactionList)-3)
+        transactionList[len(transactionList)-3] = transactionList[len(transactionList)-3].replace('(', '')
+        for word in range(1, len(transactionList)-3):
+            transactionList[0] += " "+transactionList[word]
+        for word in range(1, len(transactionList)-3):
+            transactionList.pop(1)
+        transactionList.append("Service")
+
+    elif "(" in transactionString and "Socketed" not in transactionString:
         transactionList = transactionString.split()
         transactionList[len(transactionList)-1] = transactionList[len(transactionList)-1].replace('g', '').replace('+', '')
         transactionList[len(transactionList)-2] = transactionList[len(transactionList)-2].replace('(', '').replace('):', '')
@@ -477,6 +540,7 @@ def trimString(transactionString, date):
             transactionList.pop(1)
         transactionList.append("Unsocketed")
         transactionList.append("BoE")
+
     elif "(" in transactionString and "Socketed" in transactionString:
         transactionList = transactionString.split()
         transactionList[len(transactionList)-1] = transactionList[len(transactionList)-1].replace('g', '').replace('+', '')
@@ -489,6 +553,7 @@ def trimString(transactionString, date):
             transactionList.pop(1)
         transactionList.append("Socketed")
         transactionList.append("BoE")
+
     else:
         transactionList = transactionString.split()
         transactionList[len(transactionList)-1] = transactionList[len(transactionList)-1].replace('g', '').replace('-', '')
@@ -499,13 +564,15 @@ def trimString(transactionString, date):
         for word in range(1, len(transactionList)-2):
             transactionList.pop(2)
         transactionList.append("Consumable")
+    
+    print(transactionList)
     deleteTransaction(transactionList, date)
 
 def deleteTransaction(transactionList, date):
     month = datetime.date.today().month
     year = datetime.date.today().year
     date = int(str(month) + str(year))
-    get_old_data = "SELECT BOE_EARNINGS, TOTAL_PURCHASES, TOTAL_SALARIES, RESULT FROM Earnings WHERE ID = {0}".format(date)
+    get_old_data = "SELECT BOE_EARNINGS, TOTAL_PURCHASES, TOTAL_SALARIES, RESULT, SERVICE_EARNINGS FROM Earnings WHERE ID = {0}".format(date)
     try:
         cursor = db.cursor()
         cursor.execute(get_old_data)
@@ -520,6 +587,10 @@ def deleteTransaction(transactionList, date):
         sql = "DELETE FROM BoEs WHERE ITEM='{0}' AND ILVL={1} AND SOCKET='{2}' AND PRICE={3}".format(transactionList[0], transactionList[1], socketed, transactionList[2])
         calculatedTax = calculateTax(int(transactionList[2]))
         secondsql = "UPDATE Earnings SET BOE_EARNINGS={0}, TOTAL_SALARIES={1}, RESULT={2} WHERE ID={3}".format(results[0]-int(transactionList[2]), results[2]-calculatedTax[1], results[3]-calculatedTax[0], date)
+    elif "Service" in transactionList:
+        sql = "DELETE FROM Services WHERE PACKAGE='{0}' AND SELLER='{1}' AND BUYER='{2}' AND PRICE={3}".format(transactionList[0], transactionList[1], transactionList[2], transactionList[3])
+        calculatedTax = calculateTax(int(transactionList[3]))
+        secondsql = "UPDATE Earnings SET SERVICE_EARNINGS={0}, TOTAL_SALARIES={1}, RESULT={2} WHERE ID={3}".format(results[4]-int(transactionList[3]), results[2]-calculatedTax[1], results[3]-calculatedTax[0], date)
     else:
         sql = "DELETE FROM Purchases WHERE ITEM='{0}' AND QNT={1} AND TOTAL={2}".format(transactionList[1], transactionList[0], transactionList[2])
         secondsql = "UPDATE Earnings SET TOTAL_PURCHASES={0}, RESULT={1} WHERE ID={2}".format(results[1]-int(transactionList[2]), results[3]+int(transactionList[2]), date)
@@ -535,3 +606,53 @@ def deleteTransaction(transactionList, date):
             tkinter.messagebox.showerror("Erro!", err)
     except mysql.connector.Error as err:
             tkinter.messagebox.showerror("Erro!", err)
+
+def updatePackage(packageName, packageShare):
+    if len(packageName) > 0 and packageShare > 0:
+        sql = "UPDATE Packages SET GUILD_SHARE = {0} WHERE NAME = '{1}'".format(packageShare, packageName)
+        try:
+            cursor = db.cursor()
+            cursor.execute(sql)
+            db.commit()
+            cursor.close()
+            tkinter.messagebox.showinfo("Sucesso!", "Serviço atualizado com sucesso!")
+        except mysql.connector.Error as err:
+            tkinter.messagebox.showerror("Erro!", err)
+
+def newPackage(packageName, packageShare):
+    if len(packageName) > 0 and packageShare > 0:
+        sql = "INSERT INTO Packages (NAME, GUILD_SHARE) VALUES (%s, %s)"
+        values = (packageName, packageShare)
+        try:
+            cursor = db.cursor()
+            cursor.execute(sql, values)
+            db.commit()
+            cursor.close()
+            tkinter.messagebox.showinfo("Sucesso!", "Serviço criado com sucesso!")
+        except mysql.connector.Error as err:
+            tkinter.messagebox.showerror("Erro!", err)
+
+def deletePackage(packageName):
+    if len(packageName) > 0:
+        sql = "DELETE FROM Packages WHERE NAME = '{0}'".format(packageName)
+        try:
+            cursor = db.cursor()
+            cursor.execute(sql)
+            db.commit()
+            cursor.close()
+            tkinter.messagebox.showinfo("Sucesso!", "Serviço deletado com sucesso!")
+        except mysql.connector.Error as err:
+            tkinter.messagebox.showerror("Erro!", err)
+
+def getPackages():
+    packages = []
+    try:
+        sql = "SELECT * FROM Packages"
+        cursor = db.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        for row in result:
+            packages.append(row)
+    except mysql.connector.Error as err:
+        tkinter.messagebox.showerror("Erro!", err)
+    return packages

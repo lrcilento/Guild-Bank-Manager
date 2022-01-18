@@ -7,7 +7,7 @@ A fully fledged bank manager for world of warcraft guilds.
 - [x] Action House Purchases
 - [x] Invoices for BoE's
 - [ ] Integration with different DBs
-- [ ] Rushs and Services
+- [x] Rushs and Services
 - [ ] In-depth Analytics
 - [ ] Windows Compatibility
 
