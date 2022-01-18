@@ -1,5 +1,5 @@
 # Guild-Bank-Manager
-A fully fledged bank manager for world of warcraft guilds.
+A fully-fledged bank manager for world of warcraft guilds.
 
 ## Features
 - [x] GUI
@@ -12,6 +12,7 @@ A fully fledged bank manager for world of warcraft guilds.
 - [ ] Windows Compatibility
 
 ## Installation
+- Create your database in MySQL using 'strut.sql'
 ```
 sudo pip install -r requirements.txt
 sudo chmod +x start.sh
